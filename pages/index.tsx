@@ -1,6 +1,6 @@
 import type { NextPage } from "next";
 import { Container, Flex, Heading, IconButton, Input, InputGroup, InputRightElement, SimpleGrid} from "@chakra-ui/react";
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { SearchIcon } from "@chakra-ui/icons";
 import { LinksGroup } from "../components/links-group";
 import { Link } from "../components/link";
@@ -12,6 +12,24 @@ const Home: NextPage = () => {
   const [time, setTime] = useState(new Date().toLocaleTimeString());
   const [date, setDate] = useState(new Date().toLocaleDateString());
 
+  const search = () => {
+    const element = document.getElementById("search-input") as HTMLInputElement;
+    if (element) {
+      console.log(element.value);
+      Router.push(`https://yandex.ru/search/?text=${element.value.replace(' ', '+')}`);
+    }
+  }
+
+  const handleKeyPress = useCallback((event: { key: any; }) => {
+    const element = document.getElementById("search-input") as HTMLInputElement;
+
+    if (event.key == "Enter" && element.value == "") {
+      element.focus();
+    } else if (event.key == "Enter" && element.value != "" && element === document.activeElement) {
+      search();
+    }
+  }, []);
+
   useEffect(() => {
     setHydrated(true);
     let timeTimer = setInterval(() => {
@@ -22,22 +40,16 @@ const Home: NextPage = () => {
       setDate(new Date().toLocaleDateString())
     }, 1000)
 
+    document.addEventListener('keydown', handleKeyPress)
+
     return () => {
       clearInterval(timeTimer);
       clearInterval(dateTimer);
     }
-  }, []);
+  }, [handleKeyPress]);
 
   if (!hydrated) {
     return null;
-  }
-
-  const search = () => {
-    const element = document.getElementById("search-input") as HTMLInputElement;
-    if (element) {
-      console.log(element.value);
-      Router.push(`https://yandex.ru/search/?text=${element.value.replace(' ', '+')}`);
-    }
   }
 
   return (
