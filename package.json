@@ -1,0 +1,46 @@
+{
+  "name": "schedule-new",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint",
+    "format": "prettier --write '**/*.{js,jsx,ts,tsx}'"
+  },
+  "dependencies": {
+    "next": "12.3.1",
+    "next-pwa": "^5.6.0",
+    "react": "18.2.0",
+    "react-dom": "18.2.0",
+    "@babel/core": "^7.19.1",
+    "@chakra-ui/icons": "^2.0.10",
+    "@chakra-ui/react": "^2.3.1",
+    "@chakra-ui/styled-system": "^2.3.1",
+    "@chakra-ui/system": "^2.2.9",
+    "@chakra-ui/theme-tools": "^2.0.11",
+    "@emotion/react": "^11.10.4",
+    "@emotion/styled": "^11.10.4",
+    "@zip.js/zip.js": "^2.6.21",
+    "framer-motion": "^7.2.1",
+    "jsonata": "^1.8.6",
+    "jsoncrush": "^1.1.8",
+    "moment": "^2.29.4",
+    "react-icons": "^4.4.0",
+    "underscore": "^1.13.4"
+  },
+  "devDependencies": {
+    "@types/node": "18.7.21",
+    "@types/react": "18.0.21",
+    "@types/react-dom": "18.0.6",
+    "eslint": "8.24.0",
+    "eslint-config-next": "12.3.1",
+    "typescript": "4.8.3",
+    "@types/adm-zip": "^0.5.0",
+    "@types/underscore": "^1.11.4",
+    "@typescript-eslint/eslint-plugin": "^5.36.1",
+    "@typescript-eslint/parser": "^5.36.1",
+    "prettier": "^2.7.1"
+  }
+}
