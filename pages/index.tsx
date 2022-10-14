@@ -56,30 +56,33 @@ const Home: NextPage = () => {
         
       </Container>
 
-      <Container maxW={"90%"} marginTop={10}>
+      <Container maxW={"90%"} marginTop={10} alignItems="center">
         <SimpleGrid columns={[1, 2, 3]}>
-          <LinksGroup minWidth="40%">
+          <LinksGroup minWidth="33%">
             <Link url="https://vk.com/im">Диалоги</Link>
             <Link url="https://ispi.cdo.vlsu.ru">Учебка</Link>
             <Link url="https://music.yandex.ru">Яндекс. Музыка</Link>
             <Link url="https://hd.kinopoisk.ru">Кинопоиск</Link>
             <Link url="https://youtube.com">Youtube</Link>
+            <Link url="https://github.com">Github</Link>
           </LinksGroup>
 
-          <LinksGroup minWidth="40%">
+          <LinksGroup minWidth="33%">
             <Link url="https://mangalib.me">Mangalib</Link>
             <Link url="https://shikimori.one">Shikimori</Link>
             <Link url="https://darklibria.it">Darklibria</Link>
             <Link url="https://devdocs.io">Devdoc.io</Link>
             <Link url="https://ihateregex.io">I hate regex</Link>
+            <Link url="https://regex101.com">Regex 101</Link>
           </LinksGroup>
 
-          <LinksGroup minWidth="40%">
-            <Link url="https://vk.com/im">Link 11</Link>
-            <Link url="https://vk.com/im">Link 12</Link>
-            <Link url="https://vk.com/im">Link 13</Link>
-            <Link url="https://vk.com/im">Link 14</Link>
-            <Link url="https://vk.com/im">Link 15</Link>
+          <LinksGroup minWidth="33%">
+            <Link url="https://calendar.google.com">Календарь</Link>
+            <Link url="https://mail.google.com">Почта</Link>
+            <Link url="https://translate.yandex.ru">Переводчик</Link>
+            <Link url="https://weather.yandex.ru">Погода</Link>
+            <Link url="https://keep.google.com">Google Keep</Link>
+            <Link url="https://drive.google.com">Google Диск</Link>
           </LinksGroup>
         </SimpleGrid>
       </Container>
