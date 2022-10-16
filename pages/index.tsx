@@ -69,7 +69,7 @@ const Home: NextPage = () => {
       </Container>
 
       <Container maxW={"90%"} marginTop={10} alignItems="center">
-        <SimpleGrid columns={[1, 2, 3]}>
+        <SimpleGrid columns={[1, 2, 2, 3]}>
           <LinksGroup minWidth="33%">
             <Link url="https://vk.com/im">Диалоги</Link>
             <Link url="https://ispi.cdo.vlsu.ru">Учебка</Link>
