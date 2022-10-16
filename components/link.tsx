@@ -25,7 +25,7 @@ export const Link = ({ children, url }: Props) => {
             width="24px"
             height="24px"
           />
-          <Text>{children}</Text>
+          <Text style={{fontSize: "16px"}}>{children}</Text>
         </Flex>
       </Box>
     </ChLink>
