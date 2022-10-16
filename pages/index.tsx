@@ -1,5 +1,14 @@
 import type { NextPage } from "next";
-import { Container, Flex, Heading, IconButton, Input, InputGroup, InputRightElement, SimpleGrid} from "@chakra-ui/react";
+import {
+  Container,
+  Flex,
+  Heading,
+  IconButton,
+  Input,
+  InputGroup,
+  InputRightElement,
+  SimpleGrid,
+} from "@chakra-ui/react";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { SearchIcon } from "@chakra-ui/icons";
 import { LinksGroup } from "../components/links-group";
@@ -7,7 +16,6 @@ import { Link } from "../components/link";
 import Router from "next/router";
 
 const Home: NextPage = () => {
-
   const [hydrated, setHydrated] = useState(false);
   const [time, setTime] = useState(new Date().toLocaleTimeString());
   const [date, setDate] = useState(new Date().toLocaleDateString());
@@ -16,16 +24,22 @@ const Home: NextPage = () => {
     const element = document.getElementById("search-input") as HTMLInputElement;
     if (element) {
       console.log(element.value);
-      Router.push(`https://yandex.ru/search/?text=${element.value.replace(' ', '+')}`);
+      Router.push(
+        `https://yandex.ru/search/?text=${element.value.replace(" ", "+")}`
+      );
     }
-  }
+  };
 
-  const handleKeyPress = useCallback((event: { key: any; }) => {
+  const handleKeyPress = useCallback((event: { key: any }) => {
     const element = document.getElementById("search-input") as HTMLInputElement;
 
     if (event.key == "Enter" && element.value == "") {
       element.focus();
-    } else if (event.key == "Enter" && element.value != "" && element === document.activeElement) {
+    } else if (
+      event.key == "Enter" &&
+      element.value != "" &&
+      element === document.activeElement
+    ) {
       search();
     }
   }, []);
@@ -33,19 +47,19 @@ const Home: NextPage = () => {
   useEffect(() => {
     setHydrated(true);
     let timeTimer = setInterval(() => {
-      setTime(new Date().toLocaleTimeString())
-    }, 1000)
-    
-    let dateTimer = setInterval(() => {
-      setDate(new Date().toLocaleDateString())
-    }, 1000)
+      setTime(new Date().toLocaleTimeString());
+    }, 1000);
 
-    document.addEventListener('keydown', handleKeyPress)
+    let dateTimer = setInterval(() => {
+      setDate(new Date().toLocaleDateString());
+    }, 1000);
+
+    document.addEventListener("keydown", handleKeyPress);
 
     return () => {
       clearInterval(timeTimer);
       clearInterval(dateTimer);
-    }
+    };
   }, [handleKeyPress]);
 
   if (!hydrated) {
@@ -54,7 +68,6 @@ const Home: NextPage = () => {
 
   return (
     <Container maxW={"90%"} mt={10}>
-
       <Flex justifyContent={"space-between"} flexDirection={["column", "row"]}>
         <Heading>{time}</Heading>
         <Heading>{date}</Heading>
@@ -62,10 +75,23 @@ const Home: NextPage = () => {
 
       <Container maxW={"50%"} mt={10}>
         <InputGroup>
-          <Input placeholder="Поиск в Яндекс" id={"search-input"}/>
-          <InputRightElement children={<IconButton variant={"ghost"} icon={<SearchIcon/>} color="gray.400" aria-label={"Search"} h='1.75rem' minWidth="50px" size='sm' onClick={search}/>} width="5rem" />
+          <Input placeholder="Поиск в Яндекс" id={"search-input"} />
+          <InputRightElement
+            children={
+              <IconButton
+                variant={"ghost"}
+                icon={<SearchIcon />}
+                color="gray.400"
+                aria-label={"Search"}
+                h="1.75rem"
+                minWidth="50px"
+                size="sm"
+                onClick={search}
+              />
+            }
+            width="5rem"
+          />
         </InputGroup>
-        
       </Container>
 
       <Container maxW={"90%"} marginTop={10} alignItems="center">
@@ -98,7 +124,6 @@ const Home: NextPage = () => {
           </LinksGroup>
         </SimpleGrid>
       </Container>
-
     </Container>
   );
 };
