@@ -15,6 +15,11 @@ import { LinksGroup } from "../components/links-group";
 import { Link } from "../components/link";
 import Router from "next/router";
 
+type Bookmark = {
+  title: string,
+  url: string
+}
+
 const Home: NextPage = () => {
   const [hydrated, setHydrated] = useState(false);
   const [time, setTime] = useState(new Date().toLocaleTimeString());
@@ -66,6 +71,87 @@ const Home: NextPage = () => {
     return null;
   }
 
+  const bookmarks: Array<Array<Bookmark>> = [
+    [
+      {
+        "url": "https://vk.com/im",
+        "title": "Диалоги"
+      },
+      {
+        "url": "https://ispi.cdo.vlsu.ru",
+        "title": "Учебка"
+      },
+      {
+        "url": "https://music.yandex.ru",
+        "title": "Яндекс. Музыка"
+      },
+      {
+        "url": "https://hd.kinopoisk.ru",
+        "title": "Кинопоиск"
+      },
+      {
+        "url": "https://youtube.com",
+        "title": "YouTube"
+      },
+      {
+        "url": "https://github.com",
+        "title": "GitHub"
+      }
+    ],
+    [
+      {
+        "url": "https://mangalib.me",
+        "title": "MangaLib"
+      },
+      {
+        "url": "https://shikimori.one",
+        "title": "Shikimori"
+      },
+      {
+        "url": "https://darklibria.it",
+        "title": "DarkLibria"
+      },
+      {
+        "url": "https://devdocs.io",
+        "title": "DevDocs"
+      },
+      {
+        "url": "https://ihateregex.io",
+        "title": "I Hate Regex"
+      },
+      {
+        "url": "https://regex101.com",
+        "title": "Regex101"
+      },
+    ],
+    [
+      {
+        "url": "https://calendar.google.com",
+        "title": "Календарь"
+      },
+      {
+        "url": "https://mail.google.com",
+        "title": "Почта"
+      },
+      {
+        "url": "https://translate.yandex.ru",
+        "title": "Переводчик"
+      },
+      {
+        "url": "https://weather.yandex.ru",
+        "title": "Погода"
+      },
+      {
+        "url": "https://keep.google.com",
+        "title": "Google Keep"
+      },
+      {
+        "url": "https://drive.google.com",
+        "title": "Диск"
+      },
+    ]
+  ]
+
   return (
     <Container maxW={"90%"} mt={10}>
       <Flex justifyContent={"space-between"} flexDirection={["column", "row"]}>
@@ -96,32 +182,13 @@ const Home: NextPage = () => {
 
       <Container maxW={"90%"} marginTop={10} alignItems="center">
         <SimpleGrid columns={[1, 2, 2, 3]}>
-          <LinksGroup minWidth="33%">
-            <Link url="https://vk.com/im">Диалоги</Link>
-            <Link url="https://ispi.cdo.vlsu.ru">Учебка</Link>
-            <Link url="https://music.yandex.ru">Яндекс. Музыка</Link>
-            <Link url="https://hd.kinopoisk.ru">Кинопоиск</Link>
-            <Link url="https://youtube.com">Youtube</Link>
-            <Link url="https://github.com">Github</Link>
-          </LinksGroup>
-
-          <LinksGroup minWidth="33%">
-            <Link url="https://mangalib.me">Mangalib</Link>
-            <Link url="https://shikimori.one">Shikimori</Link>
-            <Link url="https://darklibria.it">Darklibria</Link>
-            <Link url="https://devdocs.io">Devdoc.io</Link>
-            <Link url="https://ihateregex.io">I hate regex</Link>
-            <Link url="https://regex101.com">Regex 101</Link>
-          </LinksGroup>
-
-          <LinksGroup minWidth="33%">
-            <Link url="https://calendar.google.com">Календарь</Link>
-            <Link url="https://mail.google.com">Почта</Link>
-            <Link url="https://translate.yandex.ru">Переводчик</Link>
-            <Link url="https://weather.yandex.ru">Погода</Link>
-            <Link url="https://keep.google.com">Google Keep</Link>
-            <Link url="https://drive.google.com">Google Диск</Link>
-          </LinksGroup>
+          {bookmarks.map((group, index) => (
+            <LinksGroup key={index} minWidth={`${100 / bookmarks.length}%`}>
+              {group.map((bookmark, index) => (
+                <Link key={index} url={bookmark.url}>{bookmark.title}</Link>
+              ))}
+            </LinksGroup>
+          ))}
         </SimpleGrid>
       </Container>
     </Container>
