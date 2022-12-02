@@ -1,10 +1,10 @@
 {
-  "name": "schedule-new",
-  "version": "0.1.0",
+  "name": "ntp",
+  "version": "1.0.0",
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "next build && next export && mv out/_next out/next && sed -i 's/\\/_next/\\.\\/next/g' out/**.html",
+    "build": "next build && next export && mv out/_next out/next && sed -i 's/\\/_next/\\.\\/next/g' out/**.html && cp -r out/* /mnt/c/Users/dadya/.config/ntp",
     "start": "next start",
     "lint": "next lint",
     "format": "prettier --write '**/*.{js,jsx,ts,tsx}'"
