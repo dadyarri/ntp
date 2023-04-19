@@ -45,17 +45,19 @@ function Index() {
             </Container>
 
 
-            <Container maxWidth={"xl"}>
-                <Button variant={"outlined"} color={"success"} startIcon={<Add/>}
-                        sx={{margin: 3}}
-                        onClick={() => setAddModalIsOpen(true)}>Добавить</Button>
+            <Container maxWidth={"xl"} sx={{display: "flex", alignItems: "center"}}>
                 <BookmarksContext.Provider value={{bookmarks: bookmarks, setBookmarks: setBookmarks}}>
-                    <Grid container spacing={4} columns={{xs: 2, sm: 3, md: 4}}>
+                    <Grid container spacing={2} sx={{alignItems: "center"}}>
                         {bookmarks.map((bookmark: any) => (
-                            <Grid item>
+                            <Grid>
                                 <Bookmark bookmark={bookmark}/>
                             </Grid>
                         ))}
+                        <Grid>
+                            <Button variant={"outlined"} color={"success"} startIcon={<Add/>}
+                                    sx={{margin: 3}}
+                                    onClick={() => setAddModalIsOpen(true)}>Добавить</Button>
+                        </Grid>
                     </Grid>
                 </BookmarksContext.Provider>
             </Container>

@@ -19,18 +19,19 @@ export const Bookmark: FC<BookmarkProps> = ({bookmark}) => {
         <Box sx={{
             border: 1,
             borderRadius: "14px",
-            padding: "10px",
+            padding: "13px",
             cursor: "pointer",
             userSelect: "none",
             display: "flex",
             justifyContent: "space-between",
-            alignItems: "center"
+            alignItems: "center",
+            minWidth: "250px"
         }}>
             <Link href={bookmark.url}>
                 <Box sx={{display: "flex", alignItems: "center", justifyContent: "space-between"}}>
                     <img
                         src={bookmark.faviconUrl ? bookmark.faviconUrl : `${bookmark.url}/favicon.ico`} alt={"favicon"}
-                        style={{height: "20px", marginRight: "5px"}}/>
+                        style={{height: "26px", marginRight: "8px"}}/>
                     <Typography sx={{fontSize: "16px"}}>
                         {bookmark.title}
                     </Typography></Box>
