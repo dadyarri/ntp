@@ -25,24 +25,24 @@ jobs:
       - name: Archive Build
         uses: actions/upload-artifact@v2
         with:
-          name: dadyarri-ntp-v${{ github.ref_name }}
+          name: dadyarri-ntp-v${{ github.ref_name }}.zip
           path: dist
 
       - name: Get Release ID
         id: get_release_id
-        run: echo ::set-output name=release_id::$(curl -s https://api.github.com/repos/${{ github.repository }}/releases/tags/${{ github.ref_name }} | jq '.id')
+        run: echo "release_id=$(curl -s https://api.github.com/repos/${{ github.repository }}/releases/tags/${{ github.ref_name }} | jq '.id')" >> $GITHUB_OUTPUT
 
       - name: Download Artifact
         uses: actions/download-artifact@v2
         with:
-          name: dadyarri-ntp-v${{ github.ref_name }}
+          name: dadyarri-ntp-v${{ github.ref_name }}.zip
 
       - name: Upload Artifact to Release
         uses: actions/upload-release-asset@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          upload_url: https://uploads.github.com/repos/${{ github.repository }}/releases/${{ steps.get_release_id.outputs.release_id }}/assets?name=dadyarri-ntp-v${{ github.ref }}.zip
+          upload_url: https://uploads.github.com/repos/${{ github.repository }}/releases/${{ steps.get_release_id.outputs.release_id }}/assets?name=dadyarri-ntp-v${{ github.ref_name }}.zip
           asset_path: dadyarri-ntp-v${{ github.ref_name }}.zip
           asset_name: dadyarri-ntp-v${{ github.ref_name }}.zip
           asset_content_type: application/zip
