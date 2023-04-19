@@ -15,19 +15,19 @@ export const Bookmark: FC<BookmarkProps> = ({bookmark}) => {
     const [editModalIsOpen, setEditModalIsOpen] = useState(false);
 
     return <>
+        <Link href={bookmark.url}>
 
-        <Box sx={{
-            border: 1,
-            borderRadius: "14px",
-            padding: "13px",
-            cursor: "pointer",
-            userSelect: "none",
-            display: "flex",
-            justifyContent: "space-between",
-            alignItems: "center",
-            minWidth: "250px"
-        }}>
-            <Link href={bookmark.url}>
+            <Box sx={{
+                border: 1,
+                borderRadius: "14px",
+                padding: "13px",
+                cursor: "pointer",
+                userSelect: "none",
+                display: "flex",
+                justifyContent: "space-between",
+                alignItems: "center",
+                minWidth: "250px"
+            }}>
                 <Box sx={{display: "flex", alignItems: "center", justifyContent: "space-between"}}>
                     <img
                         src={bookmark.faviconUrl ? bookmark.faviconUrl : `${bookmark.url}/favicon.ico`} alt={"favicon"}
@@ -35,13 +35,15 @@ export const Bookmark: FC<BookmarkProps> = ({bookmark}) => {
                     <Typography sx={{fontSize: "16px"}}>
                         {bookmark.title}
                     </Typography></Box>
-            </Link>
-            <IconButton size={"small"} onClick={() => {
-                setEditModalIsOpen(true)
-            }}>
-                <Edit/>
-            </IconButton>
-        </Box>
+                <IconButton size={"small"} onClick={(event) => {
+                    event.preventDefault();
+                    setEditModalIsOpen(true);
+                }}>
+                    <Edit/>
+                </IconButton>
+            </Box>
+        </Link>
+
 
         <Modal
             open={editModalIsOpen}
