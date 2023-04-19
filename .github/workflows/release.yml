@@ -37,6 +37,12 @@ jobs:
         with:
           name: dadyarri-ntp-v${{ github.ref_name }}.zip
 
+      - name: Test
+        run: |
+          pwd
+          ls
+          ls ntp
+
       - name: Upload Artifact to Release
         uses: actions/upload-release-asset@v1
         env:
