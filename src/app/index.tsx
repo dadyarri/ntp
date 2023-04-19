@@ -1,5 +1,17 @@
 import React, {useEffect, useState} from 'react'
-import {Button, Container, Grid, Modal, Paper, Stack, TextField, Typography} from "@mui/material";
+import {
+    Button,
+    Container,
+    createTheme,
+    Grid,
+    Modal,
+    Paper,
+    Stack,
+    TextField,
+    ThemeProvider,
+    Typography,
+    useMediaQuery
+} from "@mui/material";
 import {DateTime} from "luxon";
 import {Bookmark as BookmarkType} from "../entities/bookmark";
 import {Bookmark} from "../shared/ui/bookmark";
@@ -12,6 +24,14 @@ function Index() {
     const [dateTime, setDateTime] = useState(DateTime.now());
     const [bookmarks, setBookmarks] = useState<BookmarkType[]>([]);
     const [addModalIsOpen, setAddModalIsOpen] = useState(false);
+
+    const prefersDarkMode = useMediaQuery('(prefers-color-scheme: dark)');
+
+    const theme = createTheme({
+        palette: {
+            mode: prefersDarkMode ? 'dark' : 'light',
+        },
+    });
 
     useEffect(() => {
         setTimeout(
@@ -33,7 +53,7 @@ function Index() {
     }, []);
 
     return (
-        <>
+        <ThemeProvider theme={theme}>
             <Container maxWidth={"md"} sx={{
                 minHeight: "100px",
                 display: "flex",
@@ -49,14 +69,20 @@ function Index() {
                 <BookmarksContext.Provider value={{bookmarks: bookmarks, setBookmarks: setBookmarks}}>
                     <Grid container spacing={2} sx={{alignItems: "center"}}>
                         {bookmarks.map((bookmark: any) => (
-                            <Grid>
+                            <Grid item>
                                 <Bookmark bookmark={bookmark}/>
                             </Grid>
                         ))}
-                        <Grid>
-                            <Button variant={"outlined"} color={"success"} startIcon={<Add/>}
+
+                        <Grid item>
+                            <Button variant={"outlined"}
+                                    color={"success"}
+                                    startIcon={<Add/>}
                                     sx={{margin: 3}}
-                                    onClick={() => setAddModalIsOpen(true)}>Добавить</Button>
+                                    onClick={() => setAddModalIsOpen(true)}
+                            >
+                                Добавить
+                            </Button>
                         </Grid>
                     </Grid>
                 </BookmarksContext.Provider>
@@ -109,7 +135,7 @@ function Index() {
 
                 </Paper>
             </Modal>
-        </>
+        </ThemeProvider>
     );
 }
 
