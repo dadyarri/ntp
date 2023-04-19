@@ -3,7 +3,10 @@
   "description": "A window to anywhere in the world, just a tab away.",
   "version": "2.0.0",
   "manifest_version": 3,
+  "permissions": [
+    "storage"
+  ],
   "chrome_url_overrides": {
-    "newtab": "./index.html"
+    "newtab": "index.html"
   }
 }
