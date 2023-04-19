@@ -1,16 +1,17 @@
 import React, {useEffect, useState} from 'react'
-import {Box, Button, Container, Grid, Modal, Paper, Stack, TextField, Typography} from "@mui/material";
+import {Button, Container, Grid, Modal, Paper, Stack, TextField, Typography} from "@mui/material";
 import {DateTime} from "luxon";
 import {Bookmark as BookmarkType} from "../entities/bookmark";
 import {Bookmark} from "../shared/ui/bookmark";
 import {Add, Save} from "@mui/icons-material";
 import {Field, Form, Formik} from "formik";
+import {BookmarksContext} from '../shared/contexts/bookmarks';
 
 function Index() {
 
     const [dateTime, setDateTime] = useState(DateTime.now());
     const [bookmarks, setBookmarks] = useState<BookmarkType[]>([]);
-    const [addModalIsOpen, setAddModalIsOpen] = useState(false)
+    const [addModalIsOpen, setAddModalIsOpen] = useState(false);
 
     useEffect(() => {
         setTimeout(
@@ -48,13 +49,15 @@ function Index() {
                 <Button variant={"outlined"} color={"success"} startIcon={<Add/>}
                         sx={{margin: 3}}
                         onClick={() => setAddModalIsOpen(true)}>Добавить</Button>
-                <Grid container spacing={4} columns={{xs: 2, sm: 3, md: 4}}>
-                    {bookmarks.map((bookmark: any) => (
-                        <Grid item>
-                            <Bookmark bookmark={bookmark}/>
-                        </Grid>
-                    ))}
-                </Grid>
+                <BookmarksContext.Provider value={{bookmarks: bookmarks, setBookmarks: setBookmarks}}>
+                    <Grid container spacing={4} columns={{xs: 2, sm: 3, md: 4}}>
+                        {bookmarks.map((bookmark: any) => (
+                            <Grid item>
+                                <Bookmark bookmark={bookmark}/>
+                            </Grid>
+                        ))}
+                    </Grid>
+                </BookmarksContext.Provider>
             </Container>
 
             <Modal
@@ -76,12 +79,13 @@ function Index() {
                     </Typography>
 
                     <Formik
-                        initialValues={{title: "", url: "", faviconUrl: ""}}
+                        initialValues={{id: bookmarks.length, title: "", url: "", faviconUrl: ""}}
                         onSubmit={(values: BookmarkType) => {
                             let b = JSON.parse(JSON.stringify(bookmarks));
                             b.push(values);
                             setBookmarks(b);
                             chrome.storage.local.set({bookmarks: b});
+                            setAddModalIsOpen(false);
                         }}>
                         <Form>
                             <Stack spacing={3}>
