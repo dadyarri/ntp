@@ -4,11 +4,12 @@ import {
     Container,
     createTheme,
     CssBaseline,
+    FormControlLabel,
     Grid,
     Modal,
     PaletteMode,
     Paper,
-    Stack,
+    Stack, Switch,
     TextField,
     ThemeProvider,
     Typography,
@@ -17,7 +18,7 @@ import {
 import {DateTime} from "luxon";
 import {Bookmark as BookmarkType} from "../entities/bookmark";
 import {Bookmark} from "../shared/ui/bookmark";
-import {Add, Save} from "@mui/icons-material";
+import {Add, Edit, Save} from "@mui/icons-material";
 import {Field, Form, Formik} from "formik";
 import {BookmarksContext} from '../shared/contexts/bookmarks';
 import {grey} from "@mui/material/colors";
@@ -95,6 +96,15 @@ function Index() {
             }}>
                 <Typography variant={"h3"}>{dateTime.toFormat("HH:mm")}</Typography>
                 <Typography variant={"h3"}>{dateTime.toFormat("dd.MM.yyyy")}</Typography>
+                <FormControlLabel
+                    control={<Switch
+                        checked={editMode}
+                        onChange={() => {
+                            setEditMode(!editMode);
+                            chrome.storage.local.set({editMode: !editMode});
+                        }}/>}
+                    label={<Edit/>}
+                />
             </Container>
 
 
