@@ -16,6 +16,7 @@ import {Bookmark as BookmarkType} from "../../../entities/bookmark";
 import {Delete, Edit, Save} from "@mui/icons-material";
 import {Field, Form, Formik} from "formik";
 import {BookmarksContext} from "../../contexts/bookmarks";
+import {grey} from "@mui/material/colors";
 
 interface BookmarkProps {
     bookmark: BookmarkType;
@@ -28,11 +29,13 @@ export const Bookmark: FC<BookmarkProps> = ({bookmark}) => {
 
     const theme = useTheme();
 
+    let isDarkMode = theme.palette.mode === "dark";
     return <>
-        <Link href={bookmark.url} sx={{color: theme.palette.mode === "dark" ? "#fff" : "#000", textDecoration: "none"}}>
+        <Link href={bookmark.url} sx={{color: isDarkMode ? grey[300] : grey[900], textDecoration: "none"}}>
 
             <Box sx={{
                 border: 1,
+                borderColor: isDarkMode ? grey[300]: grey[900],
                 borderRadius: "14px",
                 padding: "13px",
                 cursor: "pointer",
