@@ -1,4 +1,16 @@
-import {Box, Button, ButtonGroup, IconButton, Link, Modal, Paper, Stack, TextField, Typography} from "@mui/material";
+import {
+    Box,
+    Button,
+    ButtonGroup,
+    IconButton,
+    Link,
+    Modal,
+    Paper,
+    Stack,
+    TextField,
+    Typography,
+    useTheme
+} from "@mui/material";
 import React, {FC, useContext, useState} from "react";
 import {Bookmark as BookmarkType} from "../../../entities/bookmark";
 import {Delete, Edit, Save} from "@mui/icons-material";
@@ -14,8 +26,10 @@ export const Bookmark: FC<BookmarkProps> = ({bookmark}) => {
     const {bookmarks, setBookmarks} = useContext(BookmarksContext);
     const [editModalIsOpen, setEditModalIsOpen] = useState(false);
 
+    const theme = useTheme();
+
     return <>
-        <Link href={bookmark.url}>
+        <Link href={bookmark.url} sx={{color: theme.palette.mode === "dark" ? "#fff" : "#000", textDecoration: "none"}}>
 
             <Box sx={{
                 border: 1,
