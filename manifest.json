@@ -1,7 +1,7 @@
 {
   "name": "Dadyarri's new tab page",
   "description": "A window to anywhere in the world, just a tab away.",
-  "version": "2.0.0",
+  "version": "2.2.0",
   "manifest_version": 3,
   "permissions": [
     "storage"
