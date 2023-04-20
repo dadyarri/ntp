@@ -45,7 +45,12 @@ export const Bookmark: FC<BookmarkProps> = ({bookmark}) => {
                 alignItems: "center",
                 minWidth: "250px"
             }}>
-                <Box sx={{display: "flex", alignItems: "center", justifyContent: "space-between"}}>
+                <Box sx={{
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "space-between",
+                    padding: editMode ? 0 : "2px"
+                }}>
                     <img
                         src={bookmark.faviconUrl ? bookmark.faviconUrl : `${bookmark.url}/favicon.ico`} alt={"favicon"}
                         style={{height: "26px", marginRight: "8px"}}/>
