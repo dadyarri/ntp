@@ -1,10 +1,12 @@
-import React, {useEffect, useState} from 'react'
+import React, {useEffect, useMemo, useState} from 'react'
 import {
     Button,
     Container,
     createTheme,
+    CssBaseline,
     Grid,
     Modal,
+    PaletteMode,
     Paper,
     Stack,
     TextField,
@@ -18,6 +20,7 @@ import {Bookmark} from "../shared/ui/bookmark";
 import {Add, Save} from "@mui/icons-material";
 import {Field, Form, Formik} from "formik";
 import {BookmarksContext} from '../shared/contexts/bookmarks';
+import {grey} from "@mui/material/colors";
 
 function Index() {
 
@@ -26,12 +29,34 @@ function Index() {
     const [addModalIsOpen, setAddModalIsOpen] = useState(false);
 
     const prefersDarkMode = useMediaQuery('(prefers-color-scheme: dark)');
+    const colorMode = prefersDarkMode ? "dark" : "light";
 
-    const theme = createTheme({
+    const getDesignTokens = (mode: PaletteMode) => ({
         palette: {
-            mode: prefersDarkMode ? 'dark' : 'light',
+            mode,
+            ...(mode === 'light'
+                ? {
+                    background: {
+                        default: grey[50]
+                    },
+                    text: {
+                        primary: grey[900],
+                        secondary: grey[800],
+                    },
+                }
+                : {
+                    background: {
+                        default: grey[900]
+                    },
+                    text: {
+                        primary: '#fff',
+                        secondary: grey[500],
+                    },
+                }),
         },
     });
+
+    const theme = useMemo(() => createTheme(getDesignTokens(colorMode)), [colorMode]);
 
     useEffect(() => {
         setTimeout(
@@ -54,6 +79,7 @@ function Index() {
 
     return (
         <ThemeProvider theme={theme}>
+            <CssBaseline/>
             <Container maxWidth={"md"} sx={{
                 minHeight: "100px",
                 display: "flex",
