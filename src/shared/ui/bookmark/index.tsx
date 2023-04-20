@@ -24,7 +24,7 @@ interface BookmarkProps {
 
 export const Bookmark: FC<BookmarkProps> = ({bookmark}) => {
 
-    const {bookmarks, setBookmarks} = useContext(BookmarksContext);
+    const {bookmarks, setBookmarks, editMode} = useContext(BookmarksContext);
     const [editModalIsOpen, setEditModalIsOpen] = useState(false);
 
     const theme = useTheme();
@@ -35,7 +35,7 @@ export const Bookmark: FC<BookmarkProps> = ({bookmark}) => {
 
             <Box sx={{
                 border: 1,
-                borderColor: isDarkMode ? grey[300]: grey[900],
+                borderColor: isDarkMode ? grey[300] : grey[900],
                 borderRadius: "14px",
                 padding: "13px",
                 cursor: "pointer",
@@ -52,12 +52,12 @@ export const Bookmark: FC<BookmarkProps> = ({bookmark}) => {
                     <Typography sx={{fontSize: "16px"}}>
                         {bookmark.title}
                     </Typography></Box>
-                <IconButton size={"small"} onClick={(event) => {
+                {editMode && <IconButton size={"small"} onClick={(event) => {
                     event.preventDefault();
                     setEditModalIsOpen(true);
                 }}>
                     <Edit/>
-                </IconButton>
+                </IconButton>}
             </Box>
         </Link>
 

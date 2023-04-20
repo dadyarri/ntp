@@ -27,6 +27,7 @@ function Index() {
     const [dateTime, setDateTime] = useState(DateTime.now());
     const [bookmarks, setBookmarks] = useState<BookmarkType[]>([]);
     const [addModalIsOpen, setAddModalIsOpen] = useState(false);
+    const [editMode, setEditMode] = useState(true);
 
     const prefersDarkMode = useMediaQuery('(prefers-color-scheme: dark)');
     const colorMode = prefersDarkMode ? "dark" : "light";
@@ -71,7 +72,13 @@ function Index() {
                 data.bookmarks = bookmarks;
             }
 
+            if (data.editMode === undefined) {
+                chrome.storage.local.set({editMode: true});
+                data.editMode = true;
+            }
+
             setBookmarks(data.bookmarks);
+            setEditMode(data.editMode);
 
         });
 
@@ -92,7 +99,8 @@ function Index() {
 
 
             <Container maxWidth={"xl"} sx={{display: "flex", alignItems: "center"}}>
-                <BookmarksContext.Provider value={{bookmarks: bookmarks, setBookmarks: setBookmarks}}>
+                <BookmarksContext.Provider
+                    value={{bookmarks: bookmarks, setBookmarks: setBookmarks, editMode: editMode}}>
                     <Grid container spacing={2} sx={{alignItems: "center"}}>
                         {bookmarks.map((bookmark: any) => (
                             <Grid item>
@@ -100,7 +108,7 @@ function Index() {
                             </Grid>
                         ))}
 
-                        <Grid item>
+                        {editMode && <Grid item>
                             <Button variant={"outlined"}
                                     color={"success"}
                                     startIcon={<Add/>}
@@ -109,7 +117,7 @@ function Index() {
                             >
                                 Добавить
                             </Button>
-                        </Grid>
+                        </Grid>}
                     </Grid>
                 </BookmarksContext.Provider>
             </Container>
