@@ -4,12 +4,18 @@ import {
     Container,
     createTheme,
     CssBaseline,
-    FormControlLabel,
     Grid,
+    IconButton,
+    List,
+    ListItem, ListItemButton,
+    ListItemIcon,
+    ListItemText,
+    Menu,
     Modal,
     PaletteMode,
     Paper,
-    Stack, Switch,
+    Stack,
+    Switch,
     TextField,
     ThemeProvider,
     Typography,
@@ -18,10 +24,16 @@ import {
 import {DateTime} from "luxon";
 import {Bookmark as BookmarkType} from "../entities/bookmark";
 import {Bookmark} from "../shared/ui/bookmark";
-import {Add, Edit, Save} from "@mui/icons-material";
+import AddIcon from "@mui/icons-material/Add";
+import EditIcon from "@mui/icons-material/Edit";
+import FolderIcon from "@mui/icons-material/Folder";
+import ListIcon from "@mui/icons-material/List";
+import SaveIcon from "@mui/icons-material/Save";
+import SettingsIcon from "@mui/icons-material/Settings";
 import {Field, Form, Formik} from "formik";
 import {BookmarksContext} from '../shared/contexts/bookmarks';
 import {grey} from "@mui/material/colors";
+import {isInPlainMode} from "../shared/helpers/data-storing-modes";
 
 function Index() {
 
@@ -29,6 +41,10 @@ function Index() {
     const [bookmarks, setBookmarks] = useState<BookmarkType[]>([]);
     const [addModalIsOpen, setAddModalIsOpen] = useState(false);
     const [editMode, setEditMode] = useState(true);
+    const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+    const [plainMode, setPlainMode] = useState(true);
+
+    const showSettings = Boolean(anchorEl);
 
     const prefersDarkMode = useMediaQuery('(prefers-color-scheme: dark)');
     const colorMode = prefersDarkMode ? "dark" : "light";
@@ -78,8 +94,9 @@ function Index() {
                 data.editMode = true;
             }
 
-            setBookmarks(data.bookmarks);
             setEditMode(data.editMode);
+            setBookmarks(data.bookmarks);
+            setPlainMode(isInPlainMode(data.bookmarks));
 
         });
 
@@ -96,15 +113,66 @@ function Index() {
             }}>
                 <Typography variant={"h3"}>{dateTime.toFormat("HH:mm")}</Typography>
                 <Typography variant={"h3"}>{dateTime.toFormat("dd.MM.yyyy")}</Typography>
-                <FormControlLabel
-                    control={<Switch
-                        checked={editMode}
-                        onChange={() => {
-                            setEditMode(!editMode);
-                            chrome.storage.local.set({editMode: !editMode});
-                        }}/>}
-                    label={<Edit/>}
-                />
+                <IconButton onClick={(event) => setAnchorEl(event.currentTarget)}>
+                    <SettingsIcon/>
+                </IconButton>
+                <Menu
+                    open={showSettings}
+                    onClose={() => setAnchorEl(null)}
+                    anchorEl={anchorEl}
+                    PaperProps={{
+                        elevation: 0,
+                        sx: {
+                            overflow: 'visible',
+                            filter: 'drop-shadow(0px 2px 8px rgba(0,0,0,0.32))',
+                            mt: 1.5,
+                            '& .MuiAvatar-root': {
+                                width: 32,
+                                height: 32,
+                                ml: -0.5,
+                                mr: 1,
+                            },
+                            '&:before': {
+                                content: '""',
+                                display: 'block',
+                                position: 'absolute',
+                                top: 0,
+                                right: 14,
+                                width: 10,
+                                height: 10,
+                                bgcolor: 'background.paper',
+                                transform: 'translateY(-50%) rotate(45deg)',
+                                zIndex: 0,
+                            },
+                        },
+                    }}
+                    transformOrigin={{horizontal: 'right', vertical: 'top'}}
+                    anchorOrigin={{horizontal: 'right', vertical: 'bottom'}}>
+                    <List>
+                        <ListItem>
+                            <ListItemIcon>
+                                <EditIcon/>
+                            </ListItemIcon>
+                            <ListItemText primary={"Режим редактирования"}/>
+                            <Switch
+                                edge={"end"}
+                                checked={editMode}
+                                onChange={() => {
+                                    setEditMode(!editMode);
+                                    chrome.storage.local.set({editMode: !editMode});
+                                    setAnchorEl(null);
+                                }}/>
+                        </ListItem>
+                        <ListItemButton>
+                            <ListItemIcon>
+                                {plainMode ? <FolderIcon/> : <ListIcon/>}
+                            </ListItemIcon>
+                            <ListItemText>
+                                {plainMode ? "Переключиться в режим с папками" : "Переключиться в простой режим"}
+                            </ListItemText>
+                        </ListItemButton>
+                    </List>
+                </Menu>
             </Container>
 
 
@@ -121,7 +189,7 @@ function Index() {
                         {editMode && <Grid item>
                             <Button variant={"outlined"}
                                     color={"success"}
-                                    startIcon={<Add/>}
+                                    startIcon={<AddIcon/>}
                                     sx={{margin: 3}}
                                     onClick={() => setAddModalIsOpen(true)}
                             >
@@ -168,7 +236,7 @@ function Index() {
                                 <Button
                                     variant={"outlined"}
                                     color={"success"}
-                                    startIcon={<Save/>}
+                                    startIcon={<SaveIcon/>}
                                     type={"submit"}
                                 >
                                     Сохранить
