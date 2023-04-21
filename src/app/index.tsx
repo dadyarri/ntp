@@ -7,16 +7,13 @@ import {
     Grid,
     IconButton,
     List,
-    ListItem, ListItemButton,
+    ListItem,
+    ListItemButton,
     ListItemIcon,
     ListItemText,
     Menu,
-    Modal,
     PaletteMode,
-    Paper,
-    Stack,
     Switch,
-    TextField,
     ThemeProvider,
     Typography,
     useMediaQuery
@@ -29,13 +26,12 @@ import AddIcon from "@mui/icons-material/Add";
 import EditIcon from "@mui/icons-material/Edit";
 import FolderIcon from "@mui/icons-material/Folder";
 import ListIcon from "@mui/icons-material/List";
-import SaveIcon from "@mui/icons-material/Save";
 import SettingsIcon from "@mui/icons-material/Settings";
-import {Field, Form, Formik} from "formik";
 import {BookmarksContext} from '../shared/contexts/bookmarks';
 import {grey} from "@mui/material/colors";
 import {convertToComplexMode, convertToPlainMode, isInPlainMode} from "../shared/helpers/data-storing-modes";
 import {Folder} from "../shared/ui/folder";
+import {BookmarkEdit} from "../shared/ui/bookmark-edit";
 
 function Index() {
 
@@ -210,56 +206,9 @@ function Index() {
                     </Grid> : <Container  sx={{display: "flex", alignItems: "center", justifyContent: "center"}}>
                         {(bookmarks as FolderType[]).map((folder) => <Folder id={folder.id}/>)}
                     </Container>}
+                    <BookmarkEdit open={addModalIsOpen} setOpen={setAddModalIsOpen}/>
                 </BookmarksContext.Provider>
             </Container>
-
-            <Modal
-                open={addModalIsOpen}
-                onClose={() => setAddModalIsOpen(false)}
-                aria-labelledby="modal-modal-title"
-                aria-describedby="modal-modal-description"
-            >
-                <Paper sx={{
-                    position: 'absolute' as 'absolute',
-                    top: '50%',
-                    left: '50%',
-                    transform: 'translate(-50%, -50%)',
-                    width: 400,
-                    padding: 3
-                }}>
-                    <Typography id="modal-modal-title" variant="h6" component="h2" sx={{margin: 3}}>
-                        Добавить закладку
-                    </Typography>
-
-                    <Formik
-                        initialValues={{id: bookmarks.length, title: "", url: "", faviconUrl: ""}}
-                        onSubmit={(values: BookmarkType) => {
-                            let b = JSON.parse(JSON.stringify(bookmarks));
-                            b.push(values);
-                            setBookmarks(b);
-                            chrome.storage.local.set({bookmarks: b});
-                            setAddModalIsOpen(false);
-                        }}>
-                        <Form>
-                            <Stack spacing={3}>
-                                <Field as={TextField} name={"title"} label={"Название"} required/>
-                                <Field as={TextField} name={"url"} label={"Ссылка"} required/>
-                                <Field as={TextField} name={"faviconUrl"} label={"Ссылка на favicon"}/>
-
-                                <Button
-                                    variant={"outlined"}
-                                    color={"success"}
-                                    startIcon={<SaveIcon/>}
-                                    type={"submit"}
-                                >
-                                    Сохранить
-                                </Button>
-                            </Stack>
-                        </Form>
-                    </Formik>
-
-                </Paper>
-            </Modal>
         </ThemeProvider>
     );
 }
