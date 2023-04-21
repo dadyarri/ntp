@@ -34,3 +34,7 @@ export const getTotalAmountOfBookmarks = (bookmarks: Bookmark[] | Folder[]): num
     isInPlainMode(bookmarks) ? bookmarks.length :
         (bookmarks as Folder[]).reduce((total, folder) => total + folder.bookmarks.length, 0);
 
+export const getFolderNames = (bookmarks: Folder[]): string[] => {
+    return bookmarks.map(folder => folder.name)
+}
+
