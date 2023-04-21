@@ -160,7 +160,6 @@ function Index() {
                                 onChange={() => {
                                     setEditMode(!editMode);
                                     chrome.storage.local.set({editMode: !editMode});
-                                    setAnchorEl(null);
                                 }}/>
                         </ListItem>
                         <ListItemButton onClick={() => setPlainMode(!plainMode)}>
@@ -179,7 +178,7 @@ function Index() {
             <Container maxWidth={"xl"} sx={{display: "flex", alignItems: "center"}}>
                 <BookmarksContext.Provider
                     value={{bookmarks: bookmarks, setBookmarks: setBookmarks, editMode: editMode}}>
-                    <Grid container spacing={2} sx={{alignItems: "center", justifyContent: "center"}}>
+                    {plainMode && <Grid container spacing={2} sx={{alignItems: "center", justifyContent: "center"}}>
                         {bookmarks.map((bookmark: any) => (
                             <Grid item>
                                 <Bookmark bookmark={bookmark}/>
@@ -196,7 +195,7 @@ function Index() {
                                 Добавить
                             </Button>
                         </Grid>}
-                    </Grid>
+                    </Grid>}
                 </BookmarksContext.Provider>
             </Container>
 
