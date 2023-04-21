@@ -3,7 +3,6 @@ import {BookmarksContext} from "../../contexts/bookmarks";
 import {Avatar, AvatarGroup, Box, Typography, useTheme} from "@mui/material";
 import {grey} from "@mui/material/colors";
 import {Folder as FolderType} from "../../../entities/folder";
-import {Bookmark as BookmarkType} from "../../../entities/bookmark";
 
 interface FolderProps {
     id: number
