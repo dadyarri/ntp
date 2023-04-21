@@ -23,6 +23,7 @@ import {
 } from "@mui/material";
 import {DateTime} from "luxon";
 import {Bookmark as BookmarkType} from "../entities/bookmark";
+import {Folder as FolderType} from "../entities/folder";
 import {Bookmark} from "../shared/ui/bookmark";
 import AddIcon from "@mui/icons-material/Add";
 import EditIcon from "@mui/icons-material/Edit";
@@ -33,12 +34,12 @@ import SettingsIcon from "@mui/icons-material/Settings";
 import {Field, Form, Formik} from "formik";
 import {BookmarksContext} from '../shared/contexts/bookmarks';
 import {grey} from "@mui/material/colors";
-import {isInPlainMode} from "../shared/helpers/data-storing-modes";
+import {convertToComplexMode, convertToPlainMode, isInPlainMode} from "../shared/helpers/data-storing-modes";
 
 function Index() {
 
     const [dateTime, setDateTime] = useState(DateTime.now());
-    const [bookmarks, setBookmarks] = useState<BookmarkType[]>([]);
+    const [bookmarks, setBookmarks] = useState<BookmarkType[] | FolderType[]>([]);
     const [addModalIsOpen, setAddModalIsOpen] = useState(false);
     const [editMode, setEditMode] = useState(true);
     const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
@@ -162,7 +163,15 @@ function Index() {
                                     chrome.storage.local.set({editMode: !editMode});
                                 }}/>
                         </ListItem>
-                        <ListItemButton onClick={() => setPlainMode(!plainMode)}>
+                        <ListItemButton onClick={() => {
+                            setPlainMode(!plainMode)
+                            if (plainMode) {
+                                chrome.storage.local.set({bookmarks: convertToComplexMode(bookmarks as BookmarkType[])});
+                            } else {
+                                chrome.storage.local.set({bookmarks: convertToPlainMode(bookmarks as FolderType[])});
+                            }
+                            window.location.reload();
+                        }}>
                             <ListItemIcon>
                                 {plainMode ? <FolderIcon/> : <ListIcon/>}
                             </ListItemIcon>
