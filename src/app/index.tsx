@@ -163,7 +163,7 @@ function Index() {
                                     setAnchorEl(null);
                                 }}/>
                         </ListItem>
-                        <ListItemButton>
+                        <ListItemButton onClick={() => setPlainMode(!plainMode)}>
                             <ListItemIcon>
                                 {plainMode ? <FolderIcon/> : <ListIcon/>}
                             </ListItemIcon>
