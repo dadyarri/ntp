@@ -111,7 +111,7 @@ function Index() {
             <Container maxWidth={"xl"} sx={{display: "flex", alignItems: "center"}}>
                 <BookmarksContext.Provider
                     value={{bookmarks: bookmarks, setBookmarks: setBookmarks, editMode: editMode}}>
-                    <Grid container spacing={2} sx={{alignItems: "center"}}>
+                    <Grid container spacing={2} sx={{alignItems: "center", justifyContent: "center"}}>
                         {bookmarks.map((bookmark: any) => (
                             <Grid item>
                                 <Bookmark bookmark={bookmark}/>
