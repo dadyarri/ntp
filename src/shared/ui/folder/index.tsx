@@ -5,10 +5,11 @@ import {grey} from "@mui/material/colors";
 import {Folder as FolderType} from "../../../entities/folder";
 
 interface FolderProps {
-    id: number
+    id: number,
+    onClick: React.MouseEventHandler
 }
 
-export const Folder: FC<FolderProps> = ({id}) => {
+export const Folder: FC<FolderProps> = ({id, onClick}) => {
     const {bookmarks, setBookmarks} = useContext(BookmarksContext);
     const folder = (bookmarks as FolderType[]).find((folder: FolderType) => folder.id == id);
 
@@ -26,8 +27,8 @@ export const Folder: FC<FolderProps> = ({id}) => {
         display: "flex",
         justifyContent: "space-between",
         alignItems: "center",
-        minWidth: "250px"
-    }}>
+        minWidth: "250px",
+    }} onClick={onClick}>
         <Box sx={{
             display: "flex",
             alignItems: "center",
@@ -37,7 +38,7 @@ export const Folder: FC<FolderProps> = ({id}) => {
                 {folder && folder.bookmarks.map((bookmark) => <Avatar
                     src={bookmark.faviconUrl ? bookmark.faviconUrl : `${bookmark.url}/favicon.ico`}
                     key={bookmark.id}
-                    sx={{ border: "0px solid transparent" }}
+                    sx={{border: "0px solid transparent"}}
                 />)}
             </AvatarGroup>
             <Typography sx={{fontSize: "16px"}}>

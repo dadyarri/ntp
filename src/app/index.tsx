@@ -32,6 +32,7 @@ import {grey} from "@mui/material/colors";
 import {convertToComplexMode, convertToPlainMode, isInPlainMode} from "../shared/helpers/data-storing-modes";
 import {Folder} from "../shared/ui/folder";
 import {BookmarkEdit} from "../shared/ui/bookmark-edit";
+import {FolderPreview} from "../shared/ui/folder-preview";
 
 function Index() {
 
@@ -41,6 +42,8 @@ function Index() {
     const [editMode, setEditMode] = useState(true);
     const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
     const [plainMode, setPlainMode] = useState(true);
+    const [folderPreviewIsOpen, setFolderPreviewIsOpen] = useState(false);
+    const [selectedFolder, setSelectedFolder] = useState<FolderType | null>(null);
 
     const showSettings = Boolean(anchorEl);
 
@@ -203,9 +206,21 @@ function Index() {
                                 Добавить
                             </Button>
                         </Grid>}
-                    </Grid> : <Container  sx={{display: "flex", alignItems: "center", justifyContent: "center"}}>
-                        {(bookmarks as FolderType[]).map((folder) => <Folder id={folder.id}/>)}
-                    </Container>}
+                    </Grid> : <Grid spacing={2} sx={{display: "flex", alignItems: "center", justifyContent: "center"}}>
+
+                            {(bookmarks as FolderType[]).map((folder) =>
+                                <Folder id={folder.id}
+                                        onClick={() => {
+                                            setSelectedFolder(folder)
+                                            setFolderPreviewIsOpen(true)
+                                        }}/>
+                            )}
+                        <FolderPreview
+                            open={folderPreviewIsOpen}
+                            onClose={() => setFolderPreviewIsOpen(false)}
+                            folder={selectedFolder}
+                        />
+                    </Grid>}
                     <BookmarkEdit open={addModalIsOpen} setOpen={setAddModalIsOpen}/>
                 </BookmarksContext.Provider>
             </Container>
