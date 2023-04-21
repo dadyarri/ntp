@@ -29,3 +29,8 @@ export const convertToComplexMode = (bookmarks: Bookmark[]): Folder[] => {
 
     return [folder];
 };
+
+export const getTotalAmountOfBookmarks = (bookmarks: Bookmark[] | Folder[]): number =>
+    isInPlainMode(bookmarks) ? bookmarks.length :
+        (bookmarks as Folder[]).reduce((total, folder) => total + folder.bookmarks.length, 0);
+
