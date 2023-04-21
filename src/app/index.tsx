@@ -35,6 +35,7 @@ import {Field, Form, Formik} from "formik";
 import {BookmarksContext} from '../shared/contexts/bookmarks';
 import {grey} from "@mui/material/colors";
 import {convertToComplexMode, convertToPlainMode, isInPlainMode} from "../shared/helpers/data-storing-modes";
+import {Folder} from "../shared/ui/folder";
 
 function Index() {
 
@@ -189,7 +190,7 @@ function Index() {
             <Container maxWidth={"xl"} sx={{display: "flex", alignItems: "center"}}>
                 <BookmarksContext.Provider
                     value={{bookmarks: bookmarks, setBookmarks: setBookmarks, editMode: editMode}}>
-                    {plainMode && <Grid container spacing={2} sx={{alignItems: "center", justifyContent: "center"}}>
+                    {plainMode ? <Grid container spacing={2} sx={{alignItems: "center", justifyContent: "center"}}>
                         {bookmarks.map((bookmark: any) => (
                             <Grid item>
                                 <Bookmark bookmark={bookmark}/>
@@ -206,7 +207,9 @@ function Index() {
                                 Добавить
                             </Button>
                         </Grid>}
-                    </Grid>}
+                    </Grid> : <Container  sx={{display: "flex", alignItems: "center", justifyContent: "center"}}>
+                        {(bookmarks as FolderType[]).map((folder) => <Folder id={folder.id}/>)}
+                    </Container>}
                 </BookmarksContext.Provider>
             </Container>
 
