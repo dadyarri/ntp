@@ -164,13 +164,15 @@ function Index() {
                                 }}/>
                         </ListItem>
                         <ListItemButton onClick={() => {
-                            setPlainMode(!plainMode)
+                            setPlainMode(!plainMode);
+                            let newBookmarks;
                             if (plainMode) {
-                                chrome.storage.local.set({bookmarks: convertToComplexMode(bookmarks as BookmarkType[])});
+                                newBookmarks = convertToComplexMode(bookmarks as BookmarkType[]);
                             } else {
-                                chrome.storage.local.set({bookmarks: convertToPlainMode(bookmarks as FolderType[])});
+                                newBookmarks = convertToPlainMode(bookmarks as FolderType[]);
                             }
-                            window.location.reload();
+                            chrome.storage.local.set({bookmarks: newBookmarks});
+                            setBookmarks(newBookmarks);
                         }}>
                             <ListItemIcon>
                                 {plainMode ? <FolderIcon/> : <ListIcon/>}
