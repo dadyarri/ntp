@@ -20,7 +20,7 @@ interface BookmarkWithFolder extends BookmarkType {
 
 export const BookmarkEdit: FC<BookmarkEditProps> = ({bookmark, open, setOpen}) => {
 
-    const {bookmarks, setBookmarks} = useBookmarks();
+    const {bookmarks, setBookmarks, setSelectedBookmark} = useBookmarks();
 
     const plainMode = isInPlainMode(bookmarks);
 
@@ -71,7 +71,13 @@ export const BookmarkEdit: FC<BookmarkEditProps> = ({bookmark, open, setOpen}) =
 
     return <Modal
         open={open}
-        onClose={() => setOpen(false)}
+        onClose={() => {
+            setOpen(false);
+
+            if (setSelectedBookmark) {
+                setSelectedBookmark(undefined);
+            }
+        }}
     >
         <Paper sx={{
             position: 'absolute' as 'absolute',

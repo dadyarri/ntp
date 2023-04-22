@@ -5,5 +5,17 @@ import {Folder as FolderType} from "../../entities/folder";
 export const BookmarksContext = createContext<{
     bookmarks: BookmarkType[] | FolderType[],
     setBookmarks: React.Dispatch<React.SetStateAction<BookmarkType[] | FolderType[]>> | null,
-    editMode: boolean
-}>({bookmarks: [], setBookmarks: null, editMode: true});
+    editMode: boolean,
+    selectedBookmark: BookmarkType | undefined,
+    setSelectedBookmark: React.Dispatch<React.SetStateAction<BookmarkType | undefined>> | null,
+    editModalOpen: boolean,
+    setEditModalOpen: React.Dispatch<React.SetStateAction<boolean>> | null
+}>({
+    bookmarks: [],
+    setBookmarks: null,
+    editMode: true,
+    selectedBookmark: undefined,
+    setSelectedBookmark: null,
+    editModalOpen: false,
+    setEditModalOpen: null
+});

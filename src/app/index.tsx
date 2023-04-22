@@ -38,12 +38,13 @@ function Index() {
 
     const [dateTime, setDateTime] = useState(DateTime.now());
     const [bookmarks, setBookmarks] = useState<BookmarkType[] | FolderType[]>([]);
-    const [addModalIsOpen, setAddModalIsOpen] = useState(false);
+    const [editModalIsOpen, setEditModalIsOpen] = useState(false);
     const [editMode, setEditMode] = useState(true);
     const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
     const [plainMode, setPlainMode] = useState(true);
     const [folderPreviewIsOpen, setFolderPreviewIsOpen] = useState(false);
     const [selectedFolder, setSelectedFolder] = useState<FolderType | null>(null);
+    const [selectedBookmark, setSelectedBookmark] = useState<BookmarkType | undefined>(undefined);
 
     const showSettings = Boolean(anchorEl);
 
@@ -188,7 +189,15 @@ function Index() {
 
             <Container maxWidth={"xl"} sx={{display: "flex", alignItems: "center"}}>
                 <BookmarksContext.Provider
-                    value={{bookmarks: bookmarks, setBookmarks: setBookmarks, editMode: editMode}}>
+                    value={{
+                        bookmarks: bookmarks,
+                        setBookmarks: setBookmarks,
+                        editMode: editMode,
+                        selectedBookmark: selectedBookmark,
+                        setSelectedBookmark: setSelectedBookmark,
+                        editModalOpen: editModalIsOpen,
+                        setEditModalOpen: setEditModalIsOpen
+                    }}>
                     {plainMode ? <Grid container spacing={2} sx={{alignItems: "center", justifyContent: "center"}}>
                         {bookmarks.map((bookmark: any) => (
                             <Grid item>
@@ -201,27 +210,27 @@ function Index() {
                                     color={"success"}
                                     startIcon={<AddIcon/>}
                                     sx={{margin: 3}}
-                                    onClick={() => setAddModalIsOpen(true)}
+                                    onClick={() => setEditModalIsOpen(true)}
                             >
                                 Добавить
                             </Button>
                         </Grid>}
                     </Grid> : <Grid spacing={2} sx={{display: "flex", alignItems: "center", justifyContent: "center"}}>
 
-                            {(bookmarks as FolderType[]).map((folder) =>
-                                <Folder id={folder.id}
-                                        onClick={() => {
-                                            setSelectedFolder(folder)
-                                            setFolderPreviewIsOpen(true)
-                                        }}/>
-                            )}
+                        {(bookmarks as FolderType[]).map((folder) =>
+                            <Folder id={folder.id}
+                                    onClick={() => {
+                                        setSelectedFolder(folder)
+                                        setFolderPreviewIsOpen(true)
+                                    }}/>
+                        )}
                         <FolderPreview
                             open={folderPreviewIsOpen}
                             onClose={() => setFolderPreviewIsOpen(false)}
                             folder={selectedFolder}
                         />
                     </Grid>}
-                    <BookmarkEdit open={addModalIsOpen} setOpen={setAddModalIsOpen}/>
+                    <BookmarkEdit open={editModalIsOpen} setOpen={setEditModalIsOpen} bookmark={selectedBookmark}/>
                 </BookmarksContext.Provider>
             </Container>
         </ThemeProvider>
