@@ -1,10 +1,10 @@
-import {Autocomplete, Button, ButtonGroup, Modal, Paper, Stack, TextField, Typography} from "@mui/material";
+import {Button, ButtonGroup, Modal, Paper, Stack, TextField, Typography} from "@mui/material";
 import {Field, Form, Formik} from "formik";
 import {Bookmark as BookmarkType} from "../../../entities/bookmark";
 import SaveIcon from "@mui/icons-material/Save";
 import React, {FC} from "react";
 import {useBookmarks} from "../../hooks/bookmarks";
-import {getFolderNames, getTotalAmountOfBookmarks, isInPlainMode} from "../../helpers/data-storing-modes";
+import {getTotalAmountOfBookmarks, isInPlainMode} from "../../helpers/data-storing-modes";
 import {Folder as FolderType} from "../../../entities/folder";
 import {Delete} from "@mui/icons-material";
 
@@ -23,6 +23,11 @@ export const BookmarkEdit: FC<BookmarkEditProps> = ({bookmark, open, setOpen}) =
     const {bookmarks, setBookmarks, setSelectedBookmark} = useBookmarks();
 
     const plainMode = isInPlainMode(bookmarks);
+
+    const getFolderNameById = (folders: FolderType[], id: number): string => {
+        const folder = folders.find(folder => folder.bookmarks.some(bookmark => bookmark.id === id));
+        return folder ? folder.name : "";
+    };
 
     const updateBookmarks = (bookmarks: FolderType[] | BookmarkType[]) => {
         if (setBookmarks) {
@@ -98,7 +103,7 @@ export const BookmarkEdit: FC<BookmarkEditProps> = ({bookmark, open, setOpen}) =
                         title: bookmark ? bookmark.title : "",
                         url: bookmark ? bookmark.url : "",
                         faviconUrl: bookmark ? bookmark.faviconUrl : "",
-                        folderName: undefined
+                        folderName: !plainMode && bookmark ? getFolderNameById((bookmarks as FolderType[]), bookmark.id) : ""
                     }
                 }
                 onSubmit={(values: BookmarkWithFolder) => {
@@ -134,8 +139,7 @@ export const BookmarkEdit: FC<BookmarkEditProps> = ({bookmark, open, setOpen}) =
                         <Field as={TextField} name={"url"} label={"Ссылка"} required/>
                         <Field as={TextField} name={"faviconUrl"} label={"Ссылка на favicon"}/>
 
-                        {!plainMode && <Field as={Autocomplete} label={"Папка"}
-                                              options={getFolderNames((bookmarks as FolderType[]))}/>}
+                        {!plainMode && <Field as={TextField} label={"Папка"} name={"folderName"}/>}
 
 
                         <ButtonGroup>
@@ -155,7 +159,7 @@ export const BookmarkEdit: FC<BookmarkEditProps> = ({bookmark, open, setOpen}) =
                                     let b = JSON.parse(JSON.stringify(bookmarks));
                                     const index = b.findIndex((b: BookmarkType) => b.id === bookmark.id);
 
-                                    if (plainMode){
+                                    if (plainMode) {
                                         b.splice(index, 1);
                                     } else {
                                         deleteBookmarkById(b, index);
