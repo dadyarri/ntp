@@ -1,11 +1,21 @@
-import {Button, ButtonGroup, Modal, Paper, Stack, TextField, Typography} from "@mui/material";
+import {
+    Autocomplete,
+    Button,
+    ButtonGroup, createFilterOptions,
+    Modal,
+    Paper,
+    Stack,
+    TextField,
+    TextFieldProps,
+    Typography
+} from "@mui/material";
 import {Field, Form, Formik} from "formik";
 import {Bookmark as BookmarkType} from "../../../entities/bookmark";
 import SaveIcon from "@mui/icons-material/Save";
-import React, {FC} from "react";
+import React, {EventHandler, FC, useState} from "react";
 import {useBookmarks} from "../../hooks/bookmarks";
-import {getTotalAmountOfBookmarks, isInPlainMode} from "../../helpers/data-storing-modes";
-import {Folder as FolderType} from "../../../entities/folder";
+import {getFolderNames, getTotalAmountOfBookmarks, isInPlainMode} from "../../helpers/data-storing-modes";
+import {Folder, Folder as FolderType} from "../../../entities/folder";
 import {Delete} from "@mui/icons-material";
 
 interface BookmarkEditProps {
@@ -20,9 +30,16 @@ interface BookmarkWithFolder extends BookmarkType {
 
 export const BookmarkEdit: FC<BookmarkEditProps> = ({bookmark, open, setOpen}) => {
 
-    const {bookmarks, setBookmarks, setSelectedBookmark} = useBookmarks();
 
+    interface FolderOptionType {
+        inputValue?: string;
+        title: string;
+    }
+
+    const {bookmarks, setBookmarks, setSelectedBookmark} = useBookmarks();
+    const filter = createFilterOptions<FolderOptionType>();
     const plainMode = isInPlainMode(bookmarks);
+    const [folderNameValue, setFolderNameValue] = useState<FolderOptionType | null>(null);
 
     const getFolderNameById = (folders: FolderType[], id: number): string => {
         const folder = folders.find(folder => folder.bookmarks.some(bookmark => bookmark.id === id));
@@ -30,25 +47,37 @@ export const BookmarkEdit: FC<BookmarkEditProps> = ({bookmark, open, setOpen}) =
     };
 
     const updateBookmarks = (bookmarks: FolderType[] | BookmarkType[]) => {
+        console.log("updating");
         if (setBookmarks) {
+            console.log("set");
             setBookmarks(bookmarks);
         }
         chrome.storage.local.set({bookmarks: bookmarks});
     }
 
+    const folderExists = (folders: FolderType[], folderName: string): boolean => {
+        return folders.some(folder => folder.name === folderName);
+    };
+
+
     const replaceBookmarkById = (folders: FolderType[], id: number, replacement: BookmarkType): boolean => {
-        for (let i = 0; i < folders.length; i++) {
-            const folder = folders[i];
-            for (let j = 0; j < folder.bookmarks.length; j++) {
-                const bookmark = folder.bookmarks[j];
-                if (bookmark.id === id) {
-                    folder.bookmarks[j] = replacement;
-                    return true;
-                }
+        const folderName = getFolderNameById(folders, id);
+        if (folderName) {
+            const folder = folders.find(folder => folder.name === folderName);
+            const bookmarkIndex = folder?.bookmarks.findIndex(bookmark => bookmark.id === id);
+            if (bookmarkIndex !== undefined && bookmarkIndex !== -1 && folder) {
+                folder.bookmarks[bookmarkIndex] = replacement;
+                return true;
             }
         }
         return false;
-    }
+    };
+
+    const createFolder = (folders: FolderType[], folderName: string, bookmarks: BookmarkType[] = []): boolean => {
+        const id = folders.length + 1;
+        folders.push({ id, name: folderName, bookmarks });
+        return true;
+    };
 
     const deleteBookmarkById = (folders: FolderType[], id: number): boolean => {
         for (let i = 0; i < folders.length; i++) {
@@ -116,14 +145,31 @@ export const BookmarkEdit: FC<BookmarkEditProps> = ({bookmark, open, setOpen}) =
                             break;
                         }
                         case bookmark && !plainMode: {
-                            bookmark && replaceBookmarkById((bookmarks as FolderType[]), bookmark.id, values);
+                            const oldName = values.folderName;
+                            values.folderName = folderNameValue?.title ?? oldName;
+                            setFolderNameValue(null);
+
+                            const {folderName, ...bm} = values;
+
+                            if (folderExists((b as FolderType[]), values.folderName!)) {
+                                if (oldName === folderNameValue?.title) {
+                                    bookmark && replaceBookmarkById((b as FolderType[]), bookmark.id, values);
+                                } else {
+                                    bookmark && deleteBookmarkById((b as FolderType[]), bookmark.id);
+                                    addBookmarkToFolder((b as FolderType[]), values);
+                                }
+                            } else {
+                                bookmark && deleteBookmarkById((b as FolderType[]), bookmark.id);
+                                createFolder((b as FolderType[]), values.folderName!, [bm]);
+                            }
+
                             break;
                         }
                         case !bookmark && plainMode:
                             b.push(values);
                             break;
                         default:
-                            addBookmarkToFolder((bookmarks as FolderType[]), values)
+                            addBookmarkToFolder((b as FolderType[]), values)
                             break;
                     }
 
@@ -133,13 +179,66 @@ export const BookmarkEdit: FC<BookmarkEditProps> = ({bookmark, open, setOpen}) =
                     }
                     setOpen(false);
                 }}>
-                <Form>
+                {({values}) => <Form>
                     <Stack spacing={3}>
                         <Field as={TextField} name={"title"} label={"Название"} required/>
                         <Field as={TextField} name={"url"} label={"Ссылка"} required/>
                         <Field as={TextField} name={"faviconUrl"} label={"Ссылка на favicon"}/>
 
-                        {!plainMode && <Field as={TextField} label={"Папка"} name={"folderName"}/>}
+                        {!plainMode && <Field
+                            freeSolo
+                            blurOnSelect
+                            disableClearable
+                            selectOnFocus
+                            clearOnBlur
+                            handleHomeEndKeys
+                            as={Autocomplete}
+                            options={getFolderNames((bookmarks as FolderType[]))}
+                            renderInput={(params: TextFieldProps) => <TextField {...params} label="Папка"/>}
+                            getOptionLabel={(option: any): string => {
+                                // Value selected with enter, right from the input
+                                if (typeof option === 'string') {
+                                    return option;
+                                }
+                                // Add "xxx" option created dynamically
+                                if (option.inputValue) {
+                                    return option.inputValue;
+                                }
+                                // Regular option
+                                return option.title;
+                            }}
+                            name={"folderName"}
+                            value={folderNameValue ?? values.folderName}
+                            onChange={(event: EventHandler<any>, newValue: string | FolderOptionType) => {
+                                if (typeof newValue === 'string') {
+                                    setFolderNameValue({
+                                        title: newValue,
+                                    });
+                                } else if (newValue && newValue.inputValue) {
+                                    // Create a new value from the user input
+                                    setFolderNameValue({
+                                        title: newValue.inputValue,
+                                    });
+                                } else {
+                                    setFolderNameValue(newValue);
+                                }
+                            }}
+                            filterOptions={(options: FolderOptionType[], params: any) => {
+                                const filtered = filter(options, params);
+
+                                const {inputValue} = params;
+                                // Suggest the creation of a new value
+                                const isExisting = options.some((option) => inputValue === option.title);
+                                if (inputValue !== '' && !isExisting) {
+                                    filtered.push({
+                                        inputValue,
+                                        title: `Создать папку "${inputValue}"`,
+                                    });
+                                }
+
+                                return filtered;
+                            }}
+                        />}
 
 
                         <ButtonGroup>
@@ -177,7 +276,7 @@ export const BookmarkEdit: FC<BookmarkEditProps> = ({bookmark, open, setOpen}) =
                         </ButtonGroup>
 
                     </Stack>
-                </Form>
+                </Form>}
             </Formik>
 
         </Paper>
