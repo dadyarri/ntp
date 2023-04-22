@@ -123,6 +123,9 @@ export const BookmarkEdit: FC<BookmarkEditProps> = ({bookmark, open, setOpen}) =
                     }
 
                     updateBookmarks(b);
+                    if (setSelectedBookmark) {
+                        setSelectedBookmark(undefined);
+                    }
                     setOpen(false);
                 }}>
                 <Form>
@@ -160,6 +163,10 @@ export const BookmarkEdit: FC<BookmarkEditProps> = ({bookmark, open, setOpen}) =
 
                                     if (setBookmarks) {
                                         setBookmarks(b);
+                                    }
+
+                                    if (setSelectedBookmark) {
+                                        setSelectedBookmark(undefined);
                                     }
                                     chrome.storage.local.set({bookmarks: b});
                                 }}>Удалить</Button>}
